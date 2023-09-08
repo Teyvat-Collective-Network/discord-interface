@@ -1,0 +1,13 @@
+{
+    "type": "module",
+    "scripts": {
+        "debug": "DEBUG=true node . | pino-pretty -i pid,hostname,time",
+        "start": "node . | pino-pretty -i pid,hostname -t 'yyyy-mm-dd HH:MM:ss'"
+    },
+    "dependencies": {
+        "discord.js": "^14.13.0",
+        "dotenv": "^16.3.1",
+        "fastify": "^4.22.2",
+        "pino": "^8.15.1"
+    }
+}
