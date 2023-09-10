@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "debug": "DEBUG=true bun run index.ts | pino-pretty -i pid,hostname,time",
+        "dev": "DEBUG=true bun run index.ts | pino-pretty -i pid,hostname,time",
         "start": "bun run index.ts | pino-pretty -i pid,hostname -t 'yyyy-mm-dd HH:MM:ss'"
     },
     "dependencies": {
