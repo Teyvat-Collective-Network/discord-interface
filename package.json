@@ -1,13 +1,13 @@
 {
-    "scripts": {
-        "dev": "DEBUG=true bun run index.ts | pino-pretty -i pid,hostname,time",
-        "start": "bun run index.ts | pino-pretty -i pid,hostname -t 'yyyy-mm-dd HH:MM:ss'"
-    },
-    "dependencies": {
-        "discord.js": "^14.13.0",
-        "pino": "^8.15.1"
-    },
-    "devDependencies": {
-        "bun-types": "^1.0.1"
-    }
+  "scripts": {
+    "dev": "DEBUG=true bun run index.ts | pino-pretty -i pid,hostname,time",
+    "start": "bun run index.ts | pino-pretty -i pid,hostname -t 'yyyy-mm-dd HH:MM:ss'"
+  },
+  "dependencies": {
+    "discord.js": "^14.13.0",
+    "pino": "^8.15.1"
+  },
+  "devDependencies": {
+    "bun-types": "^1.0.1"
+  }
 }
