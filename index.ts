@@ -16,6 +16,19 @@ const routes = {
             throw 404;
         }
     },
+    async "GET /users"({ req }) {
+	const url = new URL(req.url);
+	const output: (string | null)[] = [];
+
+	for (const id of url.searchParams.get("users")!.split(","))
+	    try {
+		output.push((await bot.users.fetch(id)).tag);
+	    } catch {
+		output.push(null);
+	    }
+
+	return output;
+    },
     async "GET /invite/_"({ params: [code] }) {
         try {
             const invite = await bot.fetchInvite(code);
