@@ -10,14 +10,16 @@ await bot.login(Bun.env.TOKEN!);
 const routes = {
     async "GET /user/_"({ params: [userId] }) {
         try {
-            return { ...(await bot.users.fetch(userId)) };
+            const user = await bot.users.fetch(userId);
+            return { ...user, tag: user.tag };
         } catch {
             throw 404;
         }
     },
     async "GET /invite/_"({ params: [code] }) {
         try {
-            return { ...(await bot.fetchInvite(code)) };
+            const invite = await bot.fetchInvite(code);
+            return { ...invite };
         } catch {
             throw 404;
         }
