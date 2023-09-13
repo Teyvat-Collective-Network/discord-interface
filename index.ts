@@ -17,17 +17,17 @@ const routes = {
         }
     },
     async "GET /users"({ req }) {
-	const url = new URL(req.url);
-	const output: (string | null)[] = [];
+        const url = new URL(req.url);
+        const output: (string | null)[] = [];
 
-	for (const id of url.searchParams.get("users")!.split(","))
-	    try {
-		output.push((await bot.users.fetch(id)).tag);
-	    } catch {
-		output.push(null);
-	    }
+        for (const id of url.searchParams.get("users")!.split(","))
+            try {
+                output.push((await bot.users.fetch(id)).tag);
+            } catch {
+                output.push(null);
+            }
 
-	return output;
+        return output;
     },
     async "GET /invite/_"({ params: [code] }) {
         try {
