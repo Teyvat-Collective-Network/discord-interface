@@ -37,6 +37,10 @@ const routes = {
             throw 404;
         }
     },
+    async "POST /banshares"({ body }) {
+        console.log(body);
+        return {};
+    },
 } as Record<string, (data: { req: Request; params: string[]; body: any }) => any>;
 
 Bun.serve({
@@ -81,6 +85,7 @@ Bun.serve({
             }
         } catch (error) {
             if (typeof error === "number") return new Response("", { status: error });
+            if (Array.isArray(error) && typeof error[0] === "number") return new Response(JSON.stringify(error[1]), { status: error[0] });
 
             logger.error(error);
             return new Response("", { status: 500 });
