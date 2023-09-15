@@ -37,7 +37,7 @@ const routes = {
             throw 404;
         }
     },
-    async "POST /banshares"({ body }) {
+    async "POST /banshare"({ body }) {
         console.log(body);
         return {};
     },
