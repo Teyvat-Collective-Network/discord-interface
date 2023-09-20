@@ -2,7 +2,7 @@ import { ApplicationCommandOptionType, AutocompleteInteraction, ChatInputCommand
 import api from "../../../lib/api.ts";
 import { ensureOwner, ensureTCN } from "../../../lib/permissions.ts";
 import { CommandData } from "../../../lib/types.ts";
-import { sync } from "../../../lib/autostaff.ts";
+import { syncAutostaff } from "../../../lib/autostaff.ts";
 
 export const command: CommandData = {
     key: "add",
@@ -44,6 +44,6 @@ export default async function (cmd: ChatInputCommandInteraction, watch: Role, ro
     const req = await api(`!PUT /autostaff/${cmd.guildId}/${watch.id}${role ? `/${role}` : ""}`);
     if (!req.ok) throw (await req.json()).message;
 
-    sync(cmd.guild!);
+    syncAutostaff(cmd.guild!);
     return `Members with ${watch} will now automatically be designated as staff${role ? ` and receive the \`${role}\` role` : ""}.`;
 }

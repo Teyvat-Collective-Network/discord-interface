@@ -46,6 +46,6 @@ export async function ensureOwner(object: HasUser, guildObject?: HasGuild) {
 
 export async function ensureTCN(object: MightHaveGuild) {
     const id = getGuildIdOrNull(object);
-    if (id === Bun.env.HUB) return;
+    if (id === Bun.env.HQ || id === Bun.env.HUB) return;
     if (!id || (await api(`!GET /guilds/${id}`)).status === 404) throw "Permission denied (TCN servers only).";
 }

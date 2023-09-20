@@ -4,6 +4,9 @@ import api from "../../../lib/api.ts";
 export const event = Events.GuildMemberUpdate;
 
 export default async function (_: unknown, member: GuildMember) {
+    const req = await api(`!GET /guilds/${member.guild.id}`);
+    if (!req.ok) return;
+
     let staff = false;
     let roles: string[] = [];
 

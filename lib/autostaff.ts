@@ -1,7 +1,7 @@
 import { Guild } from "discord.js";
 import api from "./api.ts";
 
-export async function sync(guild: Guild) {
+export async function syncAutostaff(guild: Guild) {
     const watched: Record<string, string[]> = await api(`GET /autostaff/${guild.id}`);
     const users: Record<string, string[]> = {};
 
