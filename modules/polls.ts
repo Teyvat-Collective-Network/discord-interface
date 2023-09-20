@@ -45,9 +45,10 @@ async function cycle() {
                 }/${mid} yet. Please do so soon! (Tip: enable DMs in this server to receive these reminders as a DM instead.)`,
             );
     } catch (error) {
-        await channels.EXEC_MANAGEMENT.send(
-            `Alert: sending DM reminders for ${channels.VOTE_HERE.url}/${mid} failed entirely. Check console output for more details.`,
-        );
+        if (mid)
+            await channels.EXEC_MANAGEMENT.send(
+                `Alert: sending DM reminders for ${channels.VOTE_HERE.url}/${mid} failed entirely. Check console output for more details.`,
+            );
 
         logger.error(error);
     } finally {

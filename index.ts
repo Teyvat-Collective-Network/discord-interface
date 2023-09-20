@@ -5,6 +5,7 @@ import {
     ApplicationCommandSubCommandData,
     ApplicationCommandSubGroupData,
     ApplicationCommandType,
+    AutocompleteInteraction,
     ChatInputCommandInteraction,
     Colors,
     Events,
@@ -119,8 +120,14 @@ for (const module of fs.readdirSync("./modules")) {
                 async default(cmd: ChatInputCommandInteraction, ...args: any[]) {
                     const group = cmd.options.getSubcommandGroup(false);
                     const key = `${group ? `${group} ` : ""}${cmd.options.getSubcommand()}`;
-                    if (!handlers[key]) throw "This command has not been implemented yet.";
+                    if (!handlers[key]?.default) throw "This command has not been implemented yet.";
                     return await handlers[key].default(cmd, ...args);
+                },
+                async autocomplete(cmd: AutocompleteInteraction, ...args: any[]) {
+                    const group = cmd.options.getSubcommandGroup(false);
+                    const key = `${group ? `${group} ` : ""}${cmd.options.getSubcommand()}`;
+                    if (!handlers[key]?.autocomplete) return [];
+                    return await handlers[key].autocomplete(cmd, ...args);
                 },
             };
 
@@ -215,7 +222,7 @@ bot.on(Events.InteractionCreate, async (interaction) => {
                 if (!response) return;
                 if (!Array.isArray(response)) response = [response];
 
-                response = response.map((x: any) => (typeof x === "object" && "name" in x ? x : { name: `${x}`, value: x }));
+                response = response.slice(0, 25).map((x: any) => (typeof x === "object" && "name" in x ? x : { name: `${x}`, value: x }));
 
                 await interaction.respond(response);
             }
