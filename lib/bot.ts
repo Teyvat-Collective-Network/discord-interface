@@ -1,7 +1,10 @@
 import { Channel, Client, Events, IntentsBitField, TextChannel } from "discord.js";
 import logger from "./logger.ts";
 
-const bot = new Client({ intents: IntentsBitField.Flags.Guilds | IntentsBitField.Flags.GuildMembers, allowedMentions: { parse: [] } });
+const bot = new Client({
+    intents: IntentsBitField.Flags.Guilds | IntentsBitField.Flags.GuildMembers | IntentsBitField.Flags.GuildInvites,
+    allowedMentions: { parse: [] },
+});
 
 logger.debug(`[DI] Logging in...`);
 await bot.login(Bun.env.TOKEN!);
@@ -25,3 +28,6 @@ export const channels = {
     BOT_LOGS: await get<TextChannel>("BOT_LOGS"),
     VOTE_HERE: await get<TextChannel>("VOTE_HERE"),
 };
+
+export const hq = await bot.guilds.fetch(Bun.env.HQ!);
+export const hub = await bot.guilds.fetch(Bun.env.HUB!);

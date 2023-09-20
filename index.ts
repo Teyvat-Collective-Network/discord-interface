@@ -11,7 +11,7 @@ import {
 } from "discord.js";
 import fs from "fs";
 import api from "./lib/api.ts";
-import bot from "./lib/bot.ts";
+import bot, { hq } from "./lib/bot.ts";
 import logger from "./lib/logger.ts";
 import reply from "./lib/reply.ts";
 import { RouteMap } from "./lib/types.ts";
@@ -44,6 +44,8 @@ async function loadInteractions(path: string, object: any, key: string) {
 }
 
 const commands: ApplicationCommandData[] = [];
+const internalCommands: ApplicationCommandData[] = [];
+
 const commandHandlers: Record<number, Record<string, any>> = {};
 const interactionHandlers: any = {};
 const eventHandlers: Partial<Record<any, any[]>> = {};
@@ -93,7 +95,7 @@ for (const module of fs.readdirSync("./modules")) {
                 }
             }
 
-            commands.push({
+            const data = {
                 type: ApplicationCommandType.ChatInput,
                 name: module,
                 description: `commands in the ${module} module`,
@@ -108,7 +110,10 @@ for (const module of fs.readdirSync("./modules")) {
                     ),
                     ...options,
                 ],
-            });
+            };
+
+            if (["internals"].includes(module)) internalCommands.push(data);
+            else commands.push(data);
 
             (commandHandlers[ApplicationCommandType.ChatInput] ??= {})[module] = {
                 async default(cmd: ChatInputCommandInteraction, ...args: any[]) {
@@ -129,10 +134,14 @@ for (const module of fs.readdirSync("./modules")) {
             }
 
         if (fs.existsSync(`${path}/interactions`)) await loadInteractions(`${path}/interactions`, interactionHandlers, module);
-    } else await import(path);
+    } else {
+        await import(path);
+        logger.debug(`[DI] Loaded module root file ${path}`);
+    }
 }
 
 await bot.application!.commands.set(commands);
+await hq.commands.set(internalCommands);
 
 bot.on(Events.InteractionCreate, async (interaction) => {
     try {
@@ -342,4 +351,4 @@ for (const { id } of await api("GET /users")) {
     } catch {}
 }
 
-logger.debug("[DI] Done.")
+logger.debug("[DI] Done.");
