@@ -1,3 +1,5 @@
+import logger from "./logger.ts";
+
 export default async function (route: string, body?: any, options?: RequestInit) {
     let request = route.startsWith("!");
     if (request) route = route.slice(1);
@@ -19,7 +21,10 @@ export default async function (route: string, body?: any, options?: RequestInit)
 
     if (request) return req;
 
-    if (!req.ok) throw req.status;
+    if (!req.ok) {
+        logger.error(await req.json(), route);
+        throw req.status;
+    }
 
     const text = await req.text();
 
