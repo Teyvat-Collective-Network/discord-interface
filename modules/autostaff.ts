@@ -1,25 +1,5 @@
-import api from "../lib/api.ts";
-import { syncAutostaff } from "../lib/autostaff.ts";
-import bot from "../lib/bot.ts";
-import logger from "../lib/logger.ts";
+import { syncAllAutostaff } from "../lib/autostaff.ts";
 
 const CYCLE = 60 * 60 * 1000;
 
-setTimeout(
-    () =>
-        setInterval(async () => {
-            const guilds = await api(`GET /guilds`);
-
-            for (const { id } of guilds) {
-                const guild = bot.guilds.cache.get(id);
-                if (!guild) continue;
-
-                try {
-                    await syncAutostaff(guild);
-                } catch (error) {
-                    logger.error(error);
-                }
-            }
-        }, CYCLE),
-    CYCLE - (Date.now() % CYCLE),
-);
+setTimeout(() => setInterval(syncAllAutostaff, CYCLE), CYCLE - (Date.now() % CYCLE));

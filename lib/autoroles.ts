@@ -1,5 +1,7 @@
-import { Guild } from "discord.js";
+import { Guild, GuildMember } from "discord.js";
 import api from "./api.ts";
+import bot from "./bot.ts";
+import logger from "./logger.ts";
 
 export async function syncAutoroles(guild: Guild) {
     const data: { source: string; target: string; role: string }[] = await api(`GET /autoroles/${guild.id}`);
@@ -42,4 +44,50 @@ export async function syncAutoroles(guild: Guild) {
             ]),
         ]);
     }
+}
+
+export async function syncAllAutoroles() {
+    const guilds = await api(`GET /guilds`);
+
+    for (const { id } of [...guilds, { id: Bun.env.HQ }, { id: Bun.env.HUB }]) {
+        const guild = bot.guilds.cache.get(id);
+        if (!guild) continue;
+
+        try {
+            await syncAutoroles(guild);
+        } catch (error) {
+            logger.error(error);
+        }
+    }
+}
+
+export async function syncMemberAutoroles(member: GuildMember) {
+    const data: { source: string; target: string; role: string }[] = await api(`GET /autoroles/${member.guild.id}`);
+    if (data.length === 0) return;
+
+    const targets = data.map(({ target }) => target);
+    const give: string[] = [];
+
+    const user = await api(`GET /users/${member.id}`);
+
+    for (const { source, target, role } of data)
+        if (source) {
+            if (user.guilds[source]?.staff && (!role || user.guilds[source].roles.includes(role)) && !give.includes(target)) give.push(target);
+        } else {
+            if (user.roles.includes(role) || (Object.values(user.guilds).some((x: any) => x.roles.includes(role)) && !give.includes(target))) give.push(target);
+        }
+
+    const take = targets.filter((x) => !give.includes(x));
+
+    if (member.roles.cache.hasAll(...give) && !member.roles.cache.hasAny(...take)) return;
+
+    await member.roles.set([
+        ...new Set([
+            ...member.roles.cache
+                .toJSON()
+                .map((x) => x.id)
+                .filter((x) => !take.includes(x)),
+            ...give,
+        ]),
+    ]);
 }

@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction } from "discord.js";
-import { CommandData } from "../../../lib/types.ts";
-import { ensureOwner, ensureTCN } from "../../../lib/permissions.ts";
 import api from "../../../lib/api.ts";
+import { ensureOwner, ensureTCN } from "../../../lib/permissions.ts";
+import { CommandData } from "../../../lib/types.ts";
 
 export const command: CommandData = {
     key: "list",

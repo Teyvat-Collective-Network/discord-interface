@@ -1,8 +1,8 @@
 import { ApplicationCommandOptionType, AutocompleteInteraction, ChatInputCommandInteraction, Role } from "discord.js";
 import api from "../../../lib/api.ts";
+import { syncAutoroles } from "../../../lib/autoroles.ts";
 import { ensureOwner, ensureTCN } from "../../../lib/permissions.ts";
 import { CommandData } from "../../../lib/types.ts";
-import { syncAutoroles } from "../../../lib/autoroles.ts";
 
 export const command: CommandData = {
     group: "remove",
