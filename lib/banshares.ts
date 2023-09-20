@@ -1,6 +1,6 @@
 import { ActionRowData, ButtonStyle, ComponentType, MessageActionRowComponentData, MessageCreateOptions, User } from "discord.js";
 import api from "./api.ts";
-import bot from "./bot.ts";
+import bot, { channels } from "./bot.ts";
 import { greyButton } from "./components.ts";
 import { MessageLike } from "./types.ts";
 
@@ -219,4 +219,24 @@ export async function logExecution(guildId: string, origin: string, reason: stri
             await log.send(logData);
         } catch {}
     }
+}
+
+export async function updateDashboard() {
+    const message = (await channels.BANSHARE_DASHBOARD.messages.fetch({ limit: 1 })).first();
+
+    const pending: string[] = [];
+
+    for (const id of await api(`GET /banshares/pending`)) {
+        try {
+            await channels.BANSHARE_LOGS.messages.fetch(id);
+            pending.push(id);
+        } catch {
+            await api(`DELETE /banshares/${id}`);
+        }
+    }
+
+    const data = pending.map((x) => `- ${channels.BANSHARE_LOGS.url}/${x}`).join("\n") || "No banshares are pending!";
+
+    if (message) await message.edit(data);
+    else await channels.BANSHARE_DASHBOARD.send(data);
 }

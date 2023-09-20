@@ -20,6 +20,8 @@ async function get<T extends Channel>(key: string): Promise<T> {
 
 export const channels = {
     EXEC_MANAGEMENT: await get<TextChannel>("EXEC_MANAGEMENT"),
+    BANSHARE_DASHBOARD: await get<TextChannel>("BANSHARE_DASHBOARD"),
     BANSHARE_LOGS: await get<TextChannel>("BANSHARE_LOGS"),
     BOT_LOGS: await get<TextChannel>("BOT_LOGS"),
+    VOTE_HERE: await get<TextChannel>("VOTE_HERE"),
 };

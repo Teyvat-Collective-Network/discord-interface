@@ -1,7 +1,7 @@
 import { escapeHTML } from "bun";
 import bot, { channels } from "../lib/bot.ts";
 import { RouteMap } from "../lib/types.ts";
-import { compare, components, severities } from "../lib/banshares.ts";
+import { compare, components, severities, updateDashboard } from "../lib/banshares.ts";
 import { escapeMarkdown } from "discord.js";
 import { createGist } from "../lib/gists.ts";
 import logger from "../lib/logger.ts";
@@ -59,6 +59,8 @@ export default {
                     body.urgent ? " (**urgent**)" : ""
                 }. If you wish to alter the severity, use the buttons below the banshare **before** publishing.`,
             );
+
+            updateDashboard();
 
             return { message: post.id };
         } catch (error) {

@@ -1,6 +1,6 @@
 import { ButtonInteraction, ChannelType, MessageCreateOptions, PermissionFlagsBits, User } from "discord.js";
 import api from "../../../lib/api.ts";
-import { banButton, components, crosspostComponents, executedButton, logExecution } from "../../../lib/banshares.ts";
+import { banButton, components, crosspostComponents, executedButton, logExecution, updateDashboard } from "../../../lib/banshares.ts";
 import bot, { channels } from "../../../lib/bot.ts";
 import { greyButton } from "../../../lib/components.ts";
 import logger from "../../../lib/logger.ts";
@@ -137,4 +137,6 @@ export default async function (button: ButtonInteraction) {
 
     await api(`PUT /banshares/${message.id}/crossposts`, { crossposts });
     await message.edit({ components: components(true, severity) });
+
+    updateDashboard();
 }

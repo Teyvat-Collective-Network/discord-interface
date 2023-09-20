@@ -5,16 +5,16 @@ import {
     ApplicationCommandSubCommandData,
     ApplicationCommandSubGroupData,
     ApplicationCommandType,
-    ChatInputApplicationCommandData,
     ChatInputCommandInteraction,
     Colors,
     Events,
 } from "discord.js";
 import fs from "fs";
-import logger from "./lib/logger.ts";
-import { CommandData, RouteMap } from "./lib/types.ts";
+import api from "./lib/api.ts";
 import bot from "./lib/bot.ts";
+import logger from "./lib/logger.ts";
 import reply from "./lib/reply.ts";
+import { RouteMap } from "./lib/types.ts";
 
 process.on("uncaughtException", (error) => logger.error(error));
 
@@ -321,15 +321,25 @@ Bun.serve({
                 return new Response(JSON.stringify(data));
             }
         } catch (error) {
-            if (typeof error === "number") return new Response("", { status: error });
+            if (typeof error === "number") return new Response("{}", { status: error });
             if (Array.isArray(error) && typeof error[0] === "number") return new Response(JSON.stringify(error[1]), { status: error[0] });
 
             logger.error(error);
-            return new Response("", { status: 500 });
+            return new Response("{}", { status: 500 });
         }
 
-        return new Response("", { status: 404 });
+        return new Response("{}", { status: 404 });
     },
 });
 
 logger.debug("[DI] READY");
+logger.debug("[DI] Preloading API users...");
+
+for (const { id } of await api("GET /users")) {
+    try {
+        const user = await bot.users.fetch(id);
+        logger.trace(`[DI] ${id} = ${user.tag}`);
+    } catch {}
+}
+
+logger.debug("[DI] Done.")

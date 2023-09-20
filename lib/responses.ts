@@ -1,4 +1,4 @@
-import { ButtonStyle, ComponentType, GuildMember, User } from "discord.js";
+import { APIEmbed, ButtonStyle, ComponentType, GuildMember, User } from "discord.js";
 import { MessageLike } from "./types.ts";
 
 export function confirm(key: string, user?: User | GuildMember | string): MessageLike {
@@ -30,4 +30,9 @@ export function confirm(key: string, user?: User | GuildMember | string): Messag
         ],
         ephemeral: true,
     };
+}
+
+export function embed(data: APIEmbed) {
+    data.color ??= 0x2b2d31;
+    return { embeds: [data], files: [], components: [] };
 }

@@ -1,5 +1,6 @@
 import { ButtonInteraction } from "discord.js";
 import api from "../../../lib/api.ts";
+import { updateDashboard } from "../../../lib/banshares.ts";
 import { greyButton } from "../../../lib/components.ts";
 import { ensureObserver } from "../../../lib/permissions.ts";
 
@@ -17,6 +18,8 @@ export default async function (button: ButtonInteraction) {
     embed.fields = embed.fields?.filter((field) => field.name !== "Severity");
 
     await message.edit({ embeds: [embed], components: greyButton("Rejected") });
+
+    updateDashboard();
 
     return "Banshare rejected.";
 }
