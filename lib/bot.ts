@@ -27,6 +27,7 @@ export const channels = {
     BANSHARE_LOGS: await get<TextChannel>("BANSHARE_LOGS"),
     BOT_LOGS: await get<TextChannel>("BOT_LOGS"),
     VOTE_HERE: await get<TextChannel>("VOTE_HERE"),
+    HUB_PARTNER_LIST: await get<TextChannel>("HUB_PARTNER_LIST"),
 };
 
 export const hq = await bot.guilds.fetch(Bun.env.HQ!);
