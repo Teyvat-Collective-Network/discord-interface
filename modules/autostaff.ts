@@ -3,7 +3,7 @@ import { sync } from "../lib/autostaff.ts";
 import bot from "../lib/bot.ts";
 import logger from "../lib/logger.ts";
 
-const CYCLE = 30 * 1000;
+const CYCLE = 60 * 60 * 1000;
 
 setTimeout(
     () =>
